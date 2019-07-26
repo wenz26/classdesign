@@ -1,0 +1,15 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="basePath" value="${pageContext.request.contextPath}" />
+<%--<c:set var="basePath" value="${pageContext.request.contextPath}"></c:set>--%>
+
+<link href="../css/bootstrap.min.css" rel="stylesheet" />
+<link href="../css/font-awesome.min.css" rel="stylesheet" />
+<link href="../css/sidebar-menu.css" rel="stylesheet" />
+<link href="../css/ace-rtl.min.css" rel="stylesheet" />
+<link href="../css/ace-skins.min.css" rel="stylesheet" />
+<link href="../css/toastr.min.css" rel="stylesheet" />
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>

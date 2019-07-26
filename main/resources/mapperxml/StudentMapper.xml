@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cwz.springboot.classdesign.dao.mapper.StudentMapper">
+    <sql id="selectStu">
+        <where>
+            Student.majornum = Major.majornum
+            <if test="name != null and name != ''">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="majornum != null and majornum != ''">
+                and Major.majornum = #{majornum}
+            </if>
+        </where>
+    </sql>
+    <select id="findAllStudent" parameterType="string"
+            resultMap="studentInfo" >
+        select id, name, major, phone, age
+        from Student, Major
+        <include refid="selectStu" />
+    </select>
+    <resultMap type="student" id="studentInfo">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="age" column="age"/>
+        <association property="major" javaType="Major">
+            <id property="majornum" column="majornum"/>
+            <result property="major" column="major"/>
+        </association>
+    </resultMap>
+
+    <select id="findStudentById" parameterType="string"
+            resultMap="studentInfo" >
+        select id, name, Major.majornum, major, phone, age
+        from Student, Major
+        <where>
+            Student.majornum = Major.majornum
+            and id = #{stu_id}
+        </where>
+    </select>
+
+    <update id="updateStudent" parameterType="student">
+        update Student
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age},
+            </if>
+            <if test="majornum != null and majornum != ''">
+                majornum = #{majornum}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deteleStudent" parameterType="string">
+		delete from Student where id = #{stu_id}
+	</delete>
+
+    <insert id="createStudent" parameterType="student">
+		insert into Student(id, name, password, phone, age, majornum)
+		values(#{id}, #{name}, '123', #{phone}, #{age}, #{majornum})
+	</insert>
+
+    <select id="findStudentCourse" parameterType="string"
+            resultMap="findStuToCou">
+        select Course.courseno, Student.id, name, coursename, teacher, grade
+        from Student, Course, SC
+        <where>
+            Student.id = SC.id and Course.courseno = SC.courseno
+            <if test="nameToCourse != null and nameToCourse != ''">
+                and name like "%"#{nameToCourse}"%"
+            </if>
+        </where>
+    </select>
+    <resultMap type="course" id="findStuToCou">
+        <id property="courseno" column="courseno"/>
+        <result property="coursename" column="coursename"/>
+        <result property="teacher" column="teacher"/>
+        <collection property="students" ofType="student">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="grade" column="grade"/>
+        </collection>
+    </resultMap>
+
+    <select id="findStudentCourseById" parameterType="string"
+            resultMap="findStuToCou">
+        select Course.courseno, Student.id, name, coursename, teacher, grade
+        from Student, Course, SC
+        <where>
+            Student.id = SC.id and Course.courseno = SC.courseno
+            and Student.id = #{id} and Course.courseno = #{courseno}
+        </where>
+    </select>
+
+    <update id="updateStudentCourse" >
+        update SC
+        <set>
+            grade = #{grade}
+        </set>
+        where id = #{id} and courseno = #{courseno}
+    </update>
+
+</mapper>
